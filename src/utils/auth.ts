@@ -11,7 +11,7 @@ interface JwtPayload {
 interface User {
   id: string;
   isAdmin?: boolean;
-  accessLevel?: number;
+  accessLevel: number | 0;
 }
 
 declare global {
@@ -48,31 +48,35 @@ export const accessLevelRequired = (
   accessLevel: number,
   next: NextFunction
 ) => {
-  //   if (req.user.accessLevel >= accessLevel) {
-  //     next();
-  //   } else {
-  //     res.status(401).json({
-  //       message: "You don't have the access level to perform this operation.",
-  //     });
-  //   }
+  if (req.user) {
+    if (req.user.accessLevel >= accessLevel) {
+      next();
+    } else {
+      res.status(401).json({
+        message: "You don't have the access level to perform this operation.",
+      });
+    }
+  } else {
+    throw createHttpError(403, "Unauthorized");
+  }
 };
 
-export const director = (req: Request, res: Response, next: NextFunction) => {
-  isAuth(req, res, next);
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  accessLevelRequired(req, res, 5, next);
+};
+
+export const isManager = (req: Request, res: Response, next: NextFunction) => {
   accessLevelRequired(req, res, 4, next);
 };
 
-export const manager = (req: Request, res: Response, next: NextFunction) => {
-  isAuth(req, res, next);
+export const isDeputy = (req: Request, res: Response, next: NextFunction) => {
   accessLevelRequired(req, res, 3, next);
 };
 
-export const senior = (req: Request, res: Response, next: NextFunction) => {
-  isAuth(req, res, next);
+export const isSenior = (req: Request, res: Response, next: NextFunction) => {
   accessLevelRequired(req, res, 2, next);
 };
 
-export const rcw = (req: Request, res: Response, next: NextFunction) => {
-  isAuth(req, res, next);
+export const isRcw = (req: Request, res: Response, next: NextFunction) => {
   accessLevelRequired(req, res, 1, next);
 };

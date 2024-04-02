@@ -4,7 +4,6 @@ import cors from "cors";
 import createHttpError, { isHttpError } from "http-errors";
 import userRoutes from "./routes/userRoutes";
 import cookieParser from "cookie-parser";
-import { isAuth } from "./utils/auth";
 
 const app = express();
 

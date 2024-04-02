@@ -17,7 +17,8 @@ export const register = async (
       throw createHttpError(400, {
         message: errors.array().map((error) => error.msg),
       });
-
+    //TO DO: email verification
+    //TO DO: account activation
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) throw createHttpError(400, "This user already exists");
 
@@ -63,4 +64,15 @@ export const login = async (
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie("token").send();
+};
+
+export const updateProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
 };
