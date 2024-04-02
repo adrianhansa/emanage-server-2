@@ -66,7 +66,29 @@ export const logout = (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie("token").send();
 };
 
-export const updateProfile = async (
+export const updateProfileBasic = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProfileSecurity = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProfileAdminSecurity = async (
   req: Request,
   res: Response,
   next: NextFunction
