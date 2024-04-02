@@ -1,0 +1,185 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  email              String              @unique
+  password           String
+  firstName          String
+  lastName           String
+  isAdmin            Boolean             @default(false)
+  isActive           Boolean             @default(true)
+  accessLevel        Int
+  payrollNumber      String?
+  address            String?
+  phone              String?
+  contractHours      Int?
+  isDriver           Boolean             @default(false)
+  isInProbation      Boolean             @default(false)
+  roleId             String?             @db.ObjectId
+  role               Role?               @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  organizationId     String?             @db.ObjectId
+  organization       Organization?       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  serviceId          String?             @db.ObjectId
+  service            Service?            @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  workShifts         WorkShift[]
+  absences           Absence[]
+  trainingsCompleted TrainingCompleted[]
+}
+
+model Organization {
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  name               String              @unique
+  address            String?
+  city               String?
+  postalCode         String?
+  phone              String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  users              User[]
+  roles              Role[]
+  services           Service[]
+  shifts             Shift[]
+  workShifts         WorkShift[]
+  agencies           Agency[]
+  absences           Absence[]
+  trainings          Training[]
+  trainingsCompleted TrainingCompleted[]
+}
+
+model Service {
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  slug               String
+  address            String?
+  city               String?
+  postalCode         String?
+  phone              String?
+  organizationId     String              @db.ObjectId
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  users              User[]
+  shifts             Shift[]
+  workShifts         WorkShift[]
+  absence            Absence[]
+  trainingsCompleted TrainingCompleted[]
+}
+
+model Role {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  organizationId String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  users          User[]
+}
+
+model Shift {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  color          String
+  startTime      String
+  endTime        String
+  duration       Int
+  serviceId      String        @db.ObjectId
+  service        Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @db.ObjectId
+  workShifts     WorkShift[]
+}
+
+model WorkShift {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  shiftId        String        @db.ObjectId
+  shift          Shift         @relation(fields: [shiftId], references: [id])
+  userId         String        @db.ObjectId
+  user           User          @relation(fields: [userId], references: [id])
+  date           DateTime
+  startTime      String
+  endTime        String
+  duration       Int
+  isTraining     Boolean       @default(false)
+  isAnnualLeave  Boolean       @default(false)
+  isAbsence      Boolean       @default(false)
+  isAdminWork    Boolean       @default(false)
+  isAgency       Boolean       @default(false)
+  agencyRate     Float?
+  agencyId       String?       @db.ObjectId
+  agency         Agency?       @relation(fields: [agencyId], references: [id])
+  notes          String?
+  serviceId      String        @db.ObjectId
+  service        Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @db.ObjectId
+}
+
+model Agency {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @db.ObjectId
+  workshifts     WorkShift[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Absence {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  startDate       DateTime
+  endDate         DateTime
+  days            Int
+  notes           String?
+  isBradfordScore Boolean      @default(true)
+  userId          String       @db.ObjectId
+  user            User         @relation(fields: [userId], references: [id])
+  service         Service      @relation(fields: [serviceId], references: [id])
+  serviceId       String       @db.ObjectId
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String       @db.ObjectId
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model Training {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  slug           String
+  isMandatory    Boolean      @default(true)
+  isOnline       Boolean      @default(true)
+  monthsValid    Int
+  organizationId String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model TrainingCompleted {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String       @db.ObjectId
+  user           User         @relation(fields: [userId], references: [id])
+  name           String
+  slug           String
+  isMandatory    Boolean      @default(true)
+  isOnline       Boolean      @default(true)
+  monthsValid    Int
+  serviceId      String       @db.ObjectId
+  service        Service      @relation(fields: [serviceId], references: [id])
+  organizationId String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
