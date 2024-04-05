@@ -60,6 +60,7 @@ model Service {
   id                 String              @id @default(auto()) @map("_id") @db.ObjectId
   name               String
   slug               String
+  isOpen             Boolean             @default(true)
   address            String?
   city               String?
   postalCode         String?

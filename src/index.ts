@@ -5,6 +5,7 @@ import createHttpError, { isHttpError } from "http-errors";
 import userRoutes from "./routes/userRoutes";
 import cookieParser from "cookie-parser";
 import organizationRoutes from "./routes/organizationRoutes";
+import serviceRoutes from "./routes/service";
 
 const app = express();
 
@@ -13,8 +14,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-app.use("/api/users", userRoutes);
 app.use("/api/organization", organizationRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/service", serviceRoutes);
 
 //route NOT FOUND error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
