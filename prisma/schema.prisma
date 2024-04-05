@@ -38,6 +38,7 @@ model User {
 model Organization {
   id                 String              @id @default(auto()) @map("_id") @db.ObjectId
   name               String              @unique
+  slug               String              @unique
   address            String?
   city               String?
   postalCode         String?

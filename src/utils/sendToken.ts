@@ -4,7 +4,12 @@ import jwt from "jsonwebtoken";
 
 export const sendToken = (status: number, user: User, res: Response) => {
   const token = jwt.sign(
-    { id: user.id, isAdmin: user.isAdmin, accessLevel: user.accessLevel },
+    {
+      id: user.id,
+      organizationId: user.organizationId,
+      isAdmin: user.isAdmin,
+      accessLevel: user.accessLevel,
+    },
     process.env.SECRET as string,
     {
       expiresIn: "1d",
@@ -19,6 +24,7 @@ export const sendToken = (status: number, user: User, res: Response) => {
     })
     .json({
       id: user.id,
+      organizationId: user.organizationId,
       email: user.email,
       isAdmin: user.isAdmin,
       firstName: user.firstName,

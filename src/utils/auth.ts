@@ -6,12 +6,14 @@ interface JwtPayload {
   id: string;
   isAdmin: true;
   accessLevel: number;
+  organizationId: string;
 }
 
 interface User {
   id: string;
   isAdmin?: boolean;
   accessLevel: number | 0;
+  organizationId: string;
 }
 
 declare global {
@@ -34,11 +36,7 @@ export const isAuth = async (
     process.env.SECRET as string
   ) as JwtPayload;
   if (!userVerified) throw createHttpError(401, "Invalid token");
-  req.user = {
-    id: userVerified.id,
-    isAdmin: userVerified.isAdmin,
-    accessLevel: userVerified.accessLevel,
-  };
+  req.user = userVerified;
   next();
 };
 
@@ -57,7 +55,7 @@ export const accessLevelRequired = (
       });
     }
   } else {
-    throw createHttpError(403, "Unauthorized");
+    throw createHttpError(403, "Unauthorized..");
   }
 };
 
