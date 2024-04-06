@@ -79,6 +79,7 @@ model Service {
 model Role {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
   name           String
+  colour         String?
   organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   createdAt      DateTime     @default(now())

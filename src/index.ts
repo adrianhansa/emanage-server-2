@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes";
 import cookieParser from "cookie-parser";
 import organizationRoutes from "./routes/organizationRoutes";
 import serviceRoutes from "./routes/service";
+import roleRoutes from "./routes/role";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use("/api/organization", organizationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/service", serviceRoutes);
+app.use("/api/roles", roleRoutes);
 
 //route NOT FOUND error handler
 app.use((req: Request, res: Response, next: NextFunction) => {

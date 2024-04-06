@@ -75,7 +75,7 @@ export const login = async (
     if (!email || !password) throw createHttpError(400, "Parameters missing");
 
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email, isActive: true },
     });
     if (!user) throw createHttpError(404, "User not found");
     const passwordVerified = await bcrypt.compare(password, user.password);
