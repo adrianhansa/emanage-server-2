@@ -90,16 +90,17 @@ model Role {
 model Shift {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
   name           String
-  color          String
+  colour         String
   startTime      String
   endTime        String
   duration       Int
+  isInUse        Boolean       @default(true)
   serviceId      String        @db.ObjectId
   service        Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?       @db.ObjectId
+  organizationId String        @db.ObjectId
   workShifts     WorkShift[]
 }
 

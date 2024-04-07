@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import organizationRoutes from "./routes/organizationRoutes";
 import serviceRoutes from "./routes/service";
 import roleRoutes from "./routes/role";
+import shiftRoutes from "./routes/shifts";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/api/organization", organizationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/service", serviceRoutes);
 app.use("/api/roles", roleRoutes);
+app.use("/api/shifts", shiftRoutes);
 
 //route NOT FOUND error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
