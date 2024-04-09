@@ -9,6 +9,7 @@ import serviceRoutes from "./routes/service";
 import roleRoutes from "./routes/role";
 import shiftRoutes from "./routes/shifts";
 import trainingRoutes from "./routes/training";
+import trainingCompletedRoutes from "./routes/trainingCompleted";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/api/service", serviceRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/shifts", shiftRoutes);
 app.use("/api/trainings", trainingRoutes);
+app.use("/api/trainingsCompleted", trainingCompletedRoutes);
 
 //route NOT FOUND error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
