@@ -144,9 +144,12 @@ model Agency {
 model Absence {
   id              String       @id @default(auto()) @map("_id") @db.ObjectId
   startDate       DateTime
-  endDate         DateTime
-  days            Int
+  endDate         DateTime?
+  days            Int?
   notes           String?
+  isRTWCompleted  Boolean      @default(false)
+  dateOfRTW       DateTime?
+  isLongTerm      Boolean      @default(false)
   isBradfordScore Boolean      @default(true)
   userId          String       @db.ObjectId
   user            User         @relation(fields: [userId], references: [id])
