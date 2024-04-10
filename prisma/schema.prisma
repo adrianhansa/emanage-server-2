@@ -119,7 +119,7 @@ model WorkShift {
   isAbsence      Boolean       @default(false)
   isAdminWork    Boolean       @default(false)
   isAgency       Boolean       @default(false)
-  agencyRate     Float?
+  agencyRate     Float?        @default(0.00)
   agencyId       String?       @db.ObjectId
   agency         Agency?       @relation(fields: [agencyId], references: [id])
   notes          String?

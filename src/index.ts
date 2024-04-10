@@ -11,6 +11,7 @@ import shiftRoutes from "./routes/shifts";
 import trainingRoutes from "./routes/training";
 import trainingCompletedRoutes from "./routes/trainingCompleted";
 import agencyRoutes from "./routes/agency";
+import workShiftRoutes from "./routes/workshift";
 
 const app = express();
 
@@ -26,7 +27,8 @@ app.use("/api/roles", roleRoutes);
 app.use("/api/shifts", shiftRoutes);
 app.use("/api/trainings", trainingRoutes);
 app.use("/api/trainingsCompleted", trainingCompletedRoutes);
-app.use("/agencies", agencyRoutes);
+app.use("/api/agencies", agencyRoutes);
+app.use("/api/rota", workShiftRoutes);
 
 //route NOT FOUND error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
