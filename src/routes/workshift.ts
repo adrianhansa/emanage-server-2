@@ -4,6 +4,7 @@ import {
   addWorkShiftValidationSchema,
   getWorkShiftsValidationSchemaByDate,
   getWorkShiftsValidationSchemaByEmployee,
+  getWorkShiftsValidationSchemaByEmployeeAndByInterval,
   getWorkShiftsValidationSchemaByInterval,
   updateWorkShiftValidationSchema,
   workShiftValidationSchema,
@@ -14,6 +15,7 @@ import {
   getWorkShift,
   getWorkShiftsByDate,
   getWorkShiftsByEmployee,
+  getWorkShiftsByEmployeeAndByInterval,
   getWorkShiftsByInterval,
   updateWorkShift,
 } from "../controllers/workshift";
@@ -58,6 +60,14 @@ router.get(
   isDeputy,
   getWorkShiftsValidationSchemaByInterval,
   getWorkShiftsByInterval
+);
+
+router.get(
+  "/:serviceSlug/byEmployeeAndByInterval/:userId/:startDate/:endDate",
+  isAuth,
+  isDeputy,
+  getWorkShiftsValidationSchemaByEmployeeAndByInterval,
+  getWorkShiftsByEmployeeAndByInterval
 );
 
 router.get(

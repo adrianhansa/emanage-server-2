@@ -127,11 +127,15 @@ export const getWorkShiftsByDate = async (
       },
     });
     if (!service) throw createHttpError(404, "Service not found");
+    const date = new Date(req.params.date);
     const workShifts = await prisma.workShift.findMany({
       where: {
         organizationId: req.user?.organizationId,
         serviceId: service.id,
-        date: req.params.date,
+        date: {
+          gte: req.params.date,
+          lt: new Date(date.setDate(date.getDate() + 1)), //less then next day
+        },
       },
     });
     res.status(200).json({ workShifts });
@@ -188,11 +192,50 @@ export const getWorkShiftsByInterval = async (
       },
     });
     if (!service) throw createHttpError(404, "Service not found");
+    const endDate = new Date(req.params.endDate);
     const workShifts = await prisma.workShift.findMany({
       where: {
         organizationId: req.user?.organizationId,
         serviceId: service.id,
-        date: { lte: req.params.endDate, gte: req.params.startDate },
+        date: {
+          gte: req.params.startDate,
+          lte: new Date(endDate.setDate(endDate.getDate() + 1)), //less then next day,
+        },
+      },
+    });
+    res.status(200).json({ workShifts });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getWorkShiftsByEmployeeAndByInterval = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      throw createHttpError(400, {
+        message: errors.array().map((error) => error.msg),
+      });
+    const service = await prisma.service.findFirst({
+      where: {
+        slug: req.params.serviceSlug,
+        organizationId: req.user?.organizationId,
+      },
+    });
+    if (!service) throw createHttpError(404, "Service not found");
+    const endDate = new Date(req.params.endDate);
+    const workShifts = await prisma.workShift.findMany({
+      where: {
+        organizationId: req.user?.organizationId,
+        serviceId: service.id,
+        date: {
+          gte: req.params.startDate,
+          lte: new Date(endDate.setDate(endDate.getDate() + 1)), //less then next day,
+        },
       },
     });
     res.status(200).json({ workShifts });

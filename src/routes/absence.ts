@@ -18,24 +18,14 @@ import {
 
 const router = Router();
 
-router.get(
-  "/absencesByEmployee",
+router.post(
+  "/:serviceSlug",
   isAuth,
-  isDeputy,
-  absencesByEmployeeValidationSchema,
-  getAbsencesByEmployeeAndInterval
+  isSenior,
+  addAbsenceValidationSchema,
+  addAbsence
 );
 
-router.get(
-  "/absencesByService",
-  isAuth,
-  isDeputy,
-  absencesByServiceAndIntervalValidationSchema,
-  getAbsencesByServiceAndInterval
-);
-
-router.get("/:id", isAuth, isSenior, absenceValidationSchema, getAbsence);
-router.delete("/:id", isAuth, isDeputy, absenceValidationSchema, deleteAbsence);
 router.put(
   "/:id",
   isAuth,
@@ -43,6 +33,25 @@ router.put(
   updateAbsenceValidationSchema,
   updateAbsence
 );
-router.post("/", isAuth, isSenior, addAbsenceValidationSchema, addAbsence);
+
+router.get("/:id", isAuth, isSenior, absenceValidationSchema, getAbsence);
+
+router.delete("/:id", isAuth, isDeputy, absenceValidationSchema, deleteAbsence);
+
+router.post(
+  "/absencesByEmployee/:userId",
+  isAuth,
+  isDeputy,
+  absencesByEmployeeValidationSchema,
+  getAbsencesByEmployeeAndInterval
+);
+
+router.post(
+  "/absencesByService/:serviceSlug",
+  isAuth,
+  isDeputy,
+  absencesByServiceAndIntervalValidationSchema,
+  getAbsencesByServiceAndInterval
+);
 
 export default router;

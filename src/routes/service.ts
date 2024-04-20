@@ -11,19 +11,12 @@ import {
   createServiceValidationSchema,
   deleteServicesValidationSchema,
   getServiceValidationSchema,
-  getServicesValidationSchema,
   updateServiceValidationSchema,
 } from "../validationSchemas/service";
 
 const router = Router();
 
-router.get(
-  "/services",
-  isAuth,
-  isDeputy,
-  getServicesValidationSchema,
-  getServices
-);
+router.get("/", isAuth, isDeputy, getServices);
 router.get("/:slug", isAuth, isRcw, getServiceValidationSchema, getService);
 router.post("/", isAuth, isAdmin, createServiceValidationSchema, createService);
 router.put(

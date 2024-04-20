@@ -7,7 +7,9 @@ export const addTrainingCompletedValidationSchema = [
   check(
     "dateCompleted",
     "Please enter the date when this trainig was completed"
-  ).isDate(),
+  )
+    .isDate()
+    .toDate(),
 ];
 
 export const updateTrainingCompletedValidationSchema = [
@@ -18,7 +20,9 @@ export const updateTrainingCompletedValidationSchema = [
   check(
     "dateCompleted",
     "Please enter the date when this trainig was completed"
-  ).isDate(),
+  )
+    .isDate()
+    .toDate(),
 ];
 
 export const trainingCompletedValidationSchema = [

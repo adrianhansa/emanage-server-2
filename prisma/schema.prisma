@@ -93,7 +93,7 @@ model Shift {
   colour         String
   startTime      String
   endTime        String
-  duration       Int
+  duration       Float
   isInUse        Boolean       @default(true)
   serviceId      String        @db.ObjectId
   service        Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
@@ -114,12 +114,12 @@ model WorkShift {
   startTime      String
   endTime        String
   duration       Int
-  isTraining     Boolean       @default(false)
-  isAnnualLeave  Boolean       @default(false)
-  isAbsence      Boolean       @default(false)
-  isAdminWork    Boolean       @default(false)
-  isAgency       Boolean       @default(false)
-  agencyRate     Float?        @default(0.00)
+  isTraining     Boolean?      @default(false)
+  isAnnualLeave  Boolean?      @default(false)
+  isAbsence      Boolean?      @default(false)
+  isAdminWork    Boolean?      @default(false)
+  isAgency       Boolean?      @default(false)
+  agencyRate     Float?
   agencyId       String?       @db.ObjectId
   agency         Agency?       @relation(fields: [agencyId], references: [id])
   notes          String?
@@ -149,8 +149,8 @@ model Absence {
   notes           String?
   isRTWCompleted  Boolean      @default(false)
   dateOfRTW       DateTime?
-  isLongTerm      Boolean      @default(false)
-  isBradfordScore Boolean      @default(true)
+  isLongTerm      Boolean
+  isBradfordScore Boolean
   userId          String       @db.ObjectId
   user            User         @relation(fields: [userId], references: [id])
   service         Service      @relation(fields: [serviceId], references: [id])
@@ -166,6 +166,7 @@ model Training {
   name               String
   isMandatory        Boolean             @default(true)
   isOnline           Boolean             @default(true)
+  isSpecialist       Boolean
   monthsValid        Int
   organizationId     String              @db.ObjectId
   organization       Organization        @relation(fields: [organizationId], references: [id])

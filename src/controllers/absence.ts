@@ -153,7 +153,7 @@ export const getAbsencesByEmployeeAndInterval = async (
       });
     const absences = await prisma.absence.findMany({
       where: {
-        userId: req.body.userId,
+        userId: req.params.userId,
         organizationId: req.user?.organizationId,
         startDate: { gte: req.body.startDate },
         endDate: { lte: req.body.endDate },

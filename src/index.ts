@@ -21,9 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-app.use("/api/organization", organizationRoutes);
+app.use("/api/organizations", organizationRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/service", serviceRoutes);
+app.use("/api/services", serviceRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/shifts", shiftRoutes);
 app.use("/api/trainings", trainingRoutes);

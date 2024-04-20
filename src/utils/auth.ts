@@ -30,7 +30,7 @@ export const isAuth = async (
   next: NextFunction
 ) => {
   const token = req.cookies.token;
-  if (!token) throw createHttpError(403, "Missing token");
+  if (!token) throw createHttpError(403, "Missing token.");
   const userVerified = jwt.verify(
     token,
     process.env.SECRET as string

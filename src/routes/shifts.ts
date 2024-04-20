@@ -30,7 +30,7 @@ router.post(
   createShiftValidationSchema,
   createShift
 );
-router.get("/:id", isAuth, isDeputy, shiftValidationSchema, getShift);
+router.get("/getShift/:id", isAuth, isDeputy, shiftValidationSchema, getShift);
 router.put("/:id", isAuth, isDeputy, updateShiftValidationSchema, updateShift);
 router.delete("/:id", isAuth, isDeputy, shiftValidationSchema, deleteShift);
 

@@ -11,8 +11,10 @@ import {
   updateTrainingCompleted,
 } from "../controllers/trainingCompleted";
 import {
+  addTrainingCompletedValidationSchema,
   trainingCompletedValidationSchema,
   trainingsCompletedByEmployeeValidationSchema,
+  trainingsCompletedByServiceValidationSchema,
   trainingsCompletedByTrainingValidationSchema,
   updateTrainingCompletedValidationSchema,
 } from "../validationSchemas/trainingCompleted";
@@ -37,13 +39,19 @@ router.get(
   "/byService/:serviceId",
   isAuth,
   isDeputy,
-  trainingsCompletedByService,
+  trainingsCompletedByServiceValidationSchema,
   trainingsCompletedByService
 );
-router.post("/", isAuth, isManager, addTrainingCompleted);
+router.post(
+  "/",
+  isAuth,
+  isManager,
+  addTrainingCompletedValidationSchema,
+  addTrainingCompleted
+);
 router.put(
   "/:id",
-  isAdmin,
+  isAuth,
   isDeputy,
   updateTrainingCompletedValidationSchema,
   updateTrainingCompleted
@@ -51,7 +59,7 @@ router.put(
 
 router.get(
   "/:id",
-  isAdmin,
+  isAuth,
   isDeputy,
   trainingCompletedValidationSchema,
   trainingCompleted
@@ -59,7 +67,7 @@ router.get(
 
 router.delete(
   "/:id",
-  isAdmin,
+  isAuth,
   isDeputy,
   trainingCompletedValidationSchema,
   deleteTrainingCompleted

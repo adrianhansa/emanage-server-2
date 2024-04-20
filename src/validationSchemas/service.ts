@@ -3,15 +3,14 @@ import { check, param } from "express-validator";
 export const getServiceValidationSchema = param("slug").isString();
 
 export const createServiceValidationSchema = [
-  param("slug", "Organization identifier is required.").isString(),
   check("name", "The service name must contain at least 2 characters.")
     .isString()
     .isLength({ min: 2 }),
-  check("address").isString(),
-  check("city").isString(),
-  check("postalCode").isPostalCode("GB"),
-  check("phone").isString(),
-  check("isOpen").isBoolean(),
+  check("address").isString().optional({ values: "falsy" }),
+  check("city").isString().optional({ values: "falsy" }),
+  check("postalCode").isPostalCode("GB").optional({ values: "falsy" }),
+  check("phone").isString().optional({ values: "falsy" }),
+  check("isOpen").isBoolean().optional({ values: "falsy" }),
 ];
 
 export const updateServiceValidationSchema = [
@@ -19,17 +18,12 @@ export const updateServiceValidationSchema = [
   check("name", "The service name must contain at least 2 characters.")
     .isString()
     .isLength({ min: 2 }),
-  check("address").isString(),
+  check("address").isString().optional({ values: "falsy" }),
   check("city").isString(),
-  check("postalCode").isPostalCode("GB"),
-  check("phone").isString(),
-  check("isOpen").isBoolean(),
+  check("postalCode").isPostalCode("GB").optional({ values: "falsy" }),
+  check("phone").isString().optional({ values: "falsy" }),
+  check("isOpen").isBoolean().optional({ values: "falsy" }),
 ];
-
-export const getServicesValidationSchema = param(
-  "slug",
-  "Organization identifier is incorrect or missing."
-).isString();
 
 export const deleteServicesValidationSchema = param(
   "id",

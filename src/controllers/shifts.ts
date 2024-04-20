@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import createHttpError from "http-errors";
 import prisma from "../prisma";
+import calculateShiftDuration from "../utils/shiftDuration";
 
 export const getShifts = async (
   req: Request,
@@ -62,13 +63,25 @@ export const updateShift = async (
       throw createHttpError(400, {
         message: errors.array().map((error) => error.msg),
       });
+    //check for a shift with the same name
+    const shift = await prisma.shift.findUnique({
+      where: { id: req.params.id, organizationId: req.user?.organizationId },
+    });
+    if (!shift) throw createHttpError(404, "Shift not found.");
+    if (req.body.name !== shift.name) {
+      const existingShift = await prisma.shift.findFirst({
+        where: { serviceId: req.body.serviceId, name: req.body.name },
+      });
+      if (existingShift)
+        throw createHttpError(400, "There is already a shift with this name.");
+    }
 
-    const shift = await prisma.shift.update({
+    const updatedShift = await prisma.shift.update({
       where: { id: req.params.id, organizationId: req.user?.organizationId },
       data: { ...req.body },
     });
-    if (!shift) throw createHttpError(404, "Shift not found");
-    res.status(201).json({ shift });
+    if (!updatedShift) throw createHttpError(404, "Shift not found");
+    res.status(201).json({ shift: updatedShift });
   } catch (error) {
     next(error);
   }
@@ -85,6 +98,7 @@ export const createShift = async (
       throw createHttpError(400, {
         message: errors.array().map((error) => error.msg),
       });
+
     const service = await prisma.service.findFirst({
       where: {
         slug: req.params.serviceSlug,
@@ -92,8 +106,20 @@ export const createShift = async (
       },
     });
     if (!service) throw createHttpError(404, "service not found");
+    //check for existing shift within the same service
+    const existingShift = await prisma.shift.findFirst({
+      where: { serviceId: service.id, name: req.body.name },
+    });
+    if (existingShift)
+      throw createHttpError(400, "There is already a shift with this name");
+    const duration = calculateShiftDuration(
+      req.body.startTime,
+      req.body.endTime
+    );
+
     const shift = await prisma.shift.create({
       data: {
+        duration,
         organizationId: req.user?.organizationId,
         serviceId: service.id,
         ...req.body,
@@ -128,6 +154,7 @@ export const deleteShift = async (
     await prisma.shift.delete({
       where: { id: req.params.id, organizationId: req.body?.organizationId },
     });
+    res.status(200).json({ message: "Shift deleted" });
   } catch (error) {
     next(error);
   }

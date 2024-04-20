@@ -2,7 +2,7 @@ import { Router } from "express";
 import { isAdmin, isAuth, isManager } from "../utils/auth";
 import {
   createRole,
-  deleteeRole,
+  deleteRole,
   getRole,
   getRoles,
   updateRole,
@@ -19,6 +19,6 @@ router.get("/", isAuth, isManager, getRoles);
 router.get("/:id", isAuth, isManager, roleValidationSchema, getRole);
 router.post("/", isAuth, isAdmin, createRoleValidationSchema, createRole);
 router.put("/:id", isAuth, isAdmin, updateRoleValidationSchema, updateRole);
-router.delete("/id", isAuth, isAdmin, roleValidationSchema, deleteeRole);
+router.delete("/:id", isAuth, isAdmin, roleValidationSchema, deleteRole);
 
 export default router;

@@ -13,7 +13,7 @@ const calculateShiftDuration = (startTime: string, endTime: string) => {
     duration = endTimeInSeconds - startTimeInSeconds;
   }
 
-  return (duration / 3600).toFixed(2);
+  return parseFloat((duration / 3600).toFixed(2));
 };
 
 export default calculateShiftDuration;

@@ -81,12 +81,25 @@ export const updateAgency = async (
       throw createHttpError(400, {
         message: errors.array().map((error) => error.msg),
       });
-    const agency = await prisma.agency.update({
+    const agency = await prisma.agency.findUnique({
+      where: { id: req.params.id, organizationId: req.user?.organizationId },
+    });
+    if (agency && agency.name !== req.body.name) {
+      const existingName = await prisma.agency.findFirst({
+        where: {
+          organizationId: req.user?.organizationId,
+          name: req.body.name,
+        },
+      });
+      if (existingName)
+        throw createHttpError(400, "This name is already used.");
+    }
+    const agencyUpdated = await prisma.agency.update({
       where: { id: req.params.id, organizationId: req.user?.organizationId },
       data: { ...req.body },
     });
     if (!agency) throw createHttpError(404, "Agency not found.");
-    res.status(201).json({ agency });
+    res.status(201).json({ agency: agencyUpdated });
   } catch (error) {
     next(error);
   }

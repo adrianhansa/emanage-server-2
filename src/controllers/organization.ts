@@ -15,10 +15,8 @@ export const getOrganization = async (
       throw createHttpError(400, {
         message: errors.array().map((error) => error.msg),
       });
-    if (req.params.id !== req.user?.organizationId)
-      throw createHttpError(401, "Unauthorized");
     const organization = await prisma.organization.findUnique({
-      where: { slug: req.params.slug },
+      where: { slug: req.params.slug, id: req.user?.organizationId },
     });
     if (!organization) throw createHttpError(404, "Organization not found");
     res.status(200).json({ organization });

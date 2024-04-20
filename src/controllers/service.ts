@@ -20,6 +20,7 @@ export const getService = async (
         slug: req.params.slug,
         organizationId: req.user?.organizationId,
       },
+      include: { organization: true },
     });
     if (!service) throw createHttpError(404, "Service not found");
     res.status(200).json({ service });
@@ -65,6 +66,7 @@ export const createService = async (
         400,
         "There was an error while creating the service"
       );
+    res.status(200).json({ service });
   } catch (error) {
     next(error);
   }

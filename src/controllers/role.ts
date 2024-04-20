@@ -88,18 +88,22 @@ export const updateRole = async (
         message: errors.array().map((error) => error.msg),
       });
     const { name, colour } = req.body;
-    const role = await prisma.role.findUnique({ where: { id: req.params.id } });
+    const role = await prisma.role.findUnique({
+      where: { id: req.params.id, organizationId: req.user?.organizationId },
+    });
     if (!role) throw createHttpError(404, "Role not found");
 
-    if (req.user && role.organizationId !== req.user.organizationId)
-      throw createHttpError(401, "Unaothorized");
-    //check if the new name is different from the existing one
-    //check if the new name is available for the organization
-    if (name !== role.name)
-      throw createHttpError(
-        400,
-        "This name is taken. Please enter a different one."
-      );
+    if (name !== role.name) {
+      const existingRole = await prisma.role.findFirst({
+        where: { name, organizationId: req.user?.organizationId },
+      });
+      if (existingRole)
+        throw createHttpError(
+          400,
+          "This name is taken. Please enter a different one."
+        );
+    }
+
     const updatedRole = await prisma.role.update({
       where: { id: req.params.id },
       data: { name, colour },
@@ -110,7 +114,7 @@ export const updateRole = async (
   }
 };
 
-export const deleteeRole = async (
+export const deleteRole = async (
   req: Request,
   res: Response,
   next: NextFunction
